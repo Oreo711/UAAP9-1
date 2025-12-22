@@ -9,7 +9,7 @@ public class WalletHandler : MonoBehaviour
 	public event Action EnergyChanged;
 	public event Action ValueChanged;
 
-	private Wallet _wallet = new Wallet();
+	private readonly Wallet _wallet = new Wallet();
 
 	public int MoneyCount  => _wallet.Money;
 	public int GemCount    => _wallet.Gems;
