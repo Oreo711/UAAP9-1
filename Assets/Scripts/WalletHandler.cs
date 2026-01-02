@@ -4,53 +4,23 @@ using UnityEngine;
 
 public class WalletHandler : MonoBehaviour
 {
-	public event Action MoneyChanged;
-	public event Action GemsChanged;
-	public event Action EnergyChanged;
 	public event Action ValueChanged;
 
-	private readonly Wallet _wallet = new Wallet();
+	public Wallet Wallet {get;} = new Wallet();
 
-	public int MoneyCount  => _wallet.Money;
-	public int GemCount    => _wallet.Gems;
-	public int EnergyCount => _wallet.Energy;
-	public int Value       {get; private set;} = 1;
+	public int Value {get; private set;} = 1;
 
-	public void AddMoney ()
-	{
-		_wallet.AddMoney(Value);
-		MoneyChanged?.Invoke();
-	}
+	public void AddMoney() => Wallet.AddCurrency(CurrencyTypes.money, Value);
 
-	public void AddGems ()
-	{
-		_wallet.AddGems(Value);
-		GemsChanged?.Invoke();
-	}
+	public void AddGems() => Wallet.AddCurrency(CurrencyTypes.gems, Value);
 
-	public void AddEnergy ()
-	{
-		_wallet.AddEnergy(Value);
-		EnergyChanged?.Invoke();
-	}
+	public void AddEnergy() => Wallet.AddCurrency(CurrencyTypes.energy, Value);
 
-	public void TakeMoney ()
-	{
-		_wallet.TryTakeMoney(Value);
-		MoneyChanged?.Invoke();
-	}
+	public void TakeMoney () => Wallet.TakeCurrency(CurrencyTypes.money, Value);
 
-	public void TakeGems ()
-	{
-		_wallet.TryTakeGems(Value);
-		GemsChanged?.Invoke();
-	}
+	public void TakeGems() => Wallet.TakeCurrency(CurrencyTypes.gems, Value);
 
-	public void TakeEnergy ()
-	{
-		_wallet.TryTakeEnergy(Value);
-		EnergyChanged?.Invoke();
-	}
+	public void TakeEnergy() => Wallet.TakeCurrency(CurrencyTypes.energy, Value);
 
 	public void IncrementValue ()
 	{

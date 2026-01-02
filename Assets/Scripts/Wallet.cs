@@ -1,47 +1,44 @@
 using System;
+using System.Collections.Generic;
+
 
 public class Wallet
 {
-    public int Money {get; private set;}
-    public int Gems {get; private set;}
-    public int Energy {get; private set;}
+    public event Action<CurrencyTypes, int> CurrencyChanged;
 
-    public void AddMoney (int value) => Money += value;
-
-    public void AddGems (int value) => Gems += value;
-
-    public void AddEnergy (int value) => Energy += value;
-
-    public bool TryTakeMoney (int value)
+    private readonly Dictionary<CurrencyTypes, int> _currencies = new Dictionary<CurrencyTypes, int>
     {
-        if (value <= Money)
-        {
-            Money -= value;
-            return true;
-        }
+        { CurrencyTypes.money, 0 },
+        { CurrencyTypes.gems, 0 },
+        { CurrencyTypes.energy, 0 }
+    };
 
-        return false;
+    public Wallet (int money, int gems, int energy)
+    {
+        _currencies[CurrencyTypes.money]  = money;
+        _currencies[CurrencyTypes.gems]   = gems;
+        _currencies[CurrencyTypes.energy] = energy;
     }
 
-    public bool TryTakeGems (int value)
-    {
-        if (value <= Gems)
-        {
-            Gems -= value;
-            return true;
-        }
+    public Wallet (){}
 
-        return false;
+    public void AddCurrency (CurrencyTypes type, int value)
+    {
+        _currencies[type] += value;
+        CurrencyChanged?.Invoke(type, _currencies[type]);
     }
 
-    public bool TryTakeEnergy (int value)
+    public bool TakeCurrency (CurrencyTypes type, int value)
     {
-        if (value <= Energy)
+        if (value <= _currencies[type])
         {
-            Energy -= value;
+            _currencies[type] -= value;
+            CurrencyChanged?.Invoke(type, _currencies[type]);
             return true;
         }
 
+        _currencies[type] = 0;
+        CurrencyChanged?.Invoke(type, _currencies[type]);
         return false;
     }
 }

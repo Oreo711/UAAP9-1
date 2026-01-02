@@ -19,27 +19,33 @@ public class WalletView : MonoBehaviour
 
     private void Start ()
     {
-        _walletHandler.MoneyChanged  += HandleMoneyChanged;
-        _walletHandler.GemsChanged   += HandleGemsChanged;
-        _walletHandler.EnergyChanged += HandleEnergyChanged;
-        _walletHandler.ValueChanged  += HandleValueChanged;
+        _walletHandler.Wallet.CurrencyChanged += HandleCurrencyChanged;
+        _walletHandler.ValueChanged           += HandleValueChanged;
     }
 
-    private void HandleMoneyChanged () => SetTextToValue(_moneyCount, _walletHandler.MoneyCount);
+    private void HandleCurrencyChanged (CurrencyTypes type, int value) => SetTextToValue(type, value);
 
-    private void HandleGemsChanged () => SetTextToValue(_gemCount, _walletHandler.GemCount);
+    private void HandleValueChanged () => _value.text = _walletHandler.Value.ToString();
 
-    private void HandleEnergyChanged () => SetTextToValue(_energyCount, _walletHandler.EnergyCount);
+    private void SetTextToValue (CurrencyTypes type, int value)
+    {
+        switch (type)
+        {
+            case CurrencyTypes.money:
+                _moneyCount.text = value.ToString();
+                break;
+            case CurrencyTypes.gems:
+                _gemCount.text = value.ToString();
+                break;
+            case CurrencyTypes.energy:
+                _energyCount.text = value.ToString();
+                break;
+        }
+    }
 
-    private void HandleValueChanged() => SetTextToValue(_value, _walletHandler.Value);
-
-    private void SetTextToValue (TMP_Text text, int value) => text.text = value.ToString();
 
     private void OnDestroy ()
     {
-        _walletHandler.MoneyChanged  -= HandleMoneyChanged;
-        _walletHandler.GemsChanged   -= HandleGemsChanged;
-        _walletHandler.EnergyChanged -= HandleEnergyChanged;
-        _walletHandler.ValueChanged  -= HandleValueChanged;
+        _walletHandler.Wallet.CurrencyChanged -= HandleCurrencyChanged;
     }
 }
