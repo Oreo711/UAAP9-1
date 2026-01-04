@@ -4,41 +4,35 @@ using System.Collections.Generic;
 
 public class Wallet
 {
-    public event Action<CurrencyTypes, int> CurrencyChanged;
-
-    private readonly Dictionary<CurrencyTypes, int> _currencies = new Dictionary<CurrencyTypes, int>
+    public readonly Dictionary<CurrencyTypes, ReactiveVariable<int>> Currencies = new Dictionary<CurrencyTypes, ReactiveVariable<int>>
     {
-        { CurrencyTypes.money, 0 },
-        { CurrencyTypes.gems, 0 },
-        { CurrencyTypes.energy, 0 }
+        { CurrencyTypes.money, new ReactiveVariable<int>(0) },
+        { CurrencyTypes.gems, new ReactiveVariable<int>(0) },
+        { CurrencyTypes.energy, new ReactiveVariable<int>(0) }
     };
 
     public Wallet (int money, int gems, int energy)
     {
-        _currencies[CurrencyTypes.money]  = money;
-        _currencies[CurrencyTypes.gems]   = gems;
-        _currencies[CurrencyTypes.energy] = energy;
+        Currencies[CurrencyTypes.money].Value  = money;
+        Currencies[CurrencyTypes.gems].Value   = gems;
+        Currencies[CurrencyTypes.energy].Value = energy;
     }
 
     public Wallet (){}
 
     public void AddCurrency (CurrencyTypes type, int value)
     {
-        _currencies[type] += value;
-        CurrencyChanged?.Invoke(type, _currencies[type]);
+        Currencies[type].Value += value;
     }
 
-    public bool TakeCurrency (CurrencyTypes type, int value)
+    public void TakeCurrency (CurrencyTypes type, int value)
     {
-        if (value <= _currencies[type])
+        if (value <= Currencies[type].Value)
         {
-            _currencies[type] -= value;
-            CurrencyChanged?.Invoke(type, _currencies[type]);
-            return true;
+            Currencies[type].Value -= value;
+            return;
         }
 
-        _currencies[type] = 0;
-        CurrencyChanged?.Invoke(type, _currencies[type]);
-        return false;
+        Currencies[type].Value = 0;
     }
 }

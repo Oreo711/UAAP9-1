@@ -1,6 +1,6 @@
-using System;
 using TMPro;
 using UnityEngine;
+
 
 public class WalletView : MonoBehaviour
 {
@@ -19,13 +19,19 @@ public class WalletView : MonoBehaviour
 
     private void Start ()
     {
-        _walletHandler.Wallet.CurrencyChanged += HandleCurrencyChanged;
-        _walletHandler.ValueChanged           += HandleValueChanged;
+        _walletHandler.Wallet.Currencies[CurrencyTypes.money].Changed += HandleMoneyChanged;
+        _walletHandler.Wallet.Currencies[CurrencyTypes.gems].Changed += HandleGemsChanged;
+        _walletHandler.Wallet.Currencies[CurrencyTypes.energy].Changed += HandleEnergyChanged;
+        _walletHandler.Step.Changed += HandleValueChanged;
     }
 
-    private void HandleCurrencyChanged (CurrencyTypes type, int value) => SetTextToValue(type, value);
+    private void HandleMoneyChanged (int previousValue, int newValue) => SetTextToValue(CurrencyTypes.money, newValue);
 
-    private void HandleValueChanged () => _value.text = _walletHandler.Value.ToString();
+    private void HandleGemsChanged (int previousValue, int newValue) => SetTextToValue(CurrencyTypes.gems, newValue);
+
+    private void HandleEnergyChanged (int previousValue, int newValue) => SetTextToValue(CurrencyTypes.energy, newValue);
+
+    private void HandleValueChanged (int previousValue, int newValue) => _value.text = _walletHandler.Step.Value.ToString();
 
     private void SetTextToValue (CurrencyTypes type, int value)
     {
@@ -46,6 +52,9 @@ public class WalletView : MonoBehaviour
 
     private void OnDestroy ()
     {
-        _walletHandler.Wallet.CurrencyChanged -= HandleCurrencyChanged;
+        _walletHandler.Wallet.Currencies[CurrencyTypes.money].Changed -= HandleMoneyChanged;
+        _walletHandler.Wallet.Currencies[CurrencyTypes.gems].Changed -= HandleGemsChanged;
+        _walletHandler.Wallet.Currencies[CurrencyTypes.energy].Changed -= HandleEnergyChanged;
+        _walletHandler.Step.Changed -= HandleValueChanged;
     }
 }

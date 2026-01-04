@@ -1347,7 +1347,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1726409968}
         m_TargetAssemblyTypeName: WalletHandler, Assembly-CSharp
-        m_MethodName: IncrementValue
+        m_MethodName: IncrementStep
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1801,7 +1801,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1726409968}
         m_TargetAssemblyTypeName: WalletHandler, Assembly-CSharp
-        m_MethodName: DecrementValue
+        m_MethodName: DecrementStep
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

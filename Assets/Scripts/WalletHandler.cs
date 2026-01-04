@@ -4,39 +4,34 @@ using UnityEngine;
 
 public class WalletHandler : MonoBehaviour
 {
-	public event Action ValueChanged;
-
 	public Wallet Wallet {get;} = new Wallet();
 
-	public int Value {get; private set;} = 1;
+	public ReactiveVariable<int> Step {get;} = new ReactiveVariable<int>(1);
 
-	public void AddMoney() => Wallet.AddCurrency(CurrencyTypes.money, Value);
+	public void AddMoney() => Wallet.AddCurrency(CurrencyTypes.money, Step.Value);
 
-	public void AddGems() => Wallet.AddCurrency(CurrencyTypes.gems, Value);
+	public void AddGems() => Wallet.AddCurrency(CurrencyTypes.gems, Step.Value);
 
-	public void AddEnergy() => Wallet.AddCurrency(CurrencyTypes.energy, Value);
+	public void AddEnergy() => Wallet.AddCurrency(CurrencyTypes.energy, Step.Value);
 
-	public void TakeMoney () => Wallet.TakeCurrency(CurrencyTypes.money, Value);
+	public void TakeMoney () => Wallet.TakeCurrency(CurrencyTypes.money, Step.Value);
 
-	public void TakeGems() => Wallet.TakeCurrency(CurrencyTypes.gems, Value);
+	public void TakeGems() => Wallet.TakeCurrency(CurrencyTypes.gems, Step.Value);
 
-	public void TakeEnergy() => Wallet.TakeCurrency(CurrencyTypes.energy, Value);
+	public void TakeEnergy() => Wallet.TakeCurrency(CurrencyTypes.energy, Step.Value);
 
-	public void IncrementValue ()
+	public void IncrementStep ()
 	{
-		Value++;
-		ValueChanged?.Invoke();
+		Step.Value++;
 	}
 
-	public void DecrementValue ()
+	public void DecrementStep ()
 	{
-		Value--;
+		Step.Value--;
 
-		if (Value < 0)
+		if (Step.Value < 0)
 		{
-			Value = 0;
+			Step.Value = 0;
 		}
-
-		ValueChanged?.Invoke();
 	}
 }
